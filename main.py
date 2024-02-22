@@ -34,9 +34,7 @@ try:
                 connected = False
                 rpc = None
             print(f"Trying to reconnect in {wait} seconds.")
-            pass
         time.sleep(wait)
 except KeyboardInterrupt:
     if rpc is not None:
         rpc.close()
-    pass
