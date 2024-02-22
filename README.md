@@ -1,4 +1,4 @@
-# discord-rich-presence
+# Discord Rich Presence
 This is the Discord Rich Presence for SecSchool.
 
 ## Contributing
