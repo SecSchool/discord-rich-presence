@@ -43,17 +43,18 @@ def is_running():
     return False
 
 argument_parser = argparse.ArgumentParser()
-argument_parser.add_argument("--process-blacklist", "-pb", required=False)
+argument_parser.add_argument("--blacklist", "-b", required=False)
 arguments = argument_parser.parse_args()
 
-if arguments.process_blacklist is None:
+if arguments.blacklist is None:
     process_blacklist = None
 else:
     try:
-        process_blacklist_file = open(arguments.process_blacklist, "r")
+        process_blacklist_file = open(arguments.blacklist, "r")
         process_blacklist = set(process_blacklist_file.readlines())
+        print(f"Blacklist '{arguments.blacklist}' loaded.")
     except Exception:
-        print(f"File '{arguments.process_blacklist}' not found or no permission!")
+        print(f"File '{arguments.blacklist}' not found or no permission!")
         exit(1)
 
 try:
