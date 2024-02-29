@@ -1,6 +1,7 @@
-import time
+import time, psutil, argparse
 from pypresence import Presence
 
+rpc = None
 connected = False
 wait = 10
 
@@ -21,20 +22,55 @@ def connect():
             wait += 5
         return None
 
-rpc = connect()
+def disconnect():
+    global connected
+    global rpc
+    if rpc is not None:
+        print("Disconnecting...")
+        rpc.close()
+        print("Disconnected.")
+        rpc = None
+    connected = False
+
+def is_running():
+    global process_blacklist
+    if process_blacklist is not None:
+        for process in psutil.process_iter():
+            for name in process_blacklist:
+                if process.name() == name.strip():
+                    print(f"Blacklisted process '{name.strip()}' detected!")
+                    return True
+    return False
+
+argument_parser = argparse.ArgumentParser()
+argument_parser.add_argument("--process-blacklist", "-pb", required=False)
+arguments = argument_parser.parse_args()
+
+if arguments.process_blacklist is None:
+    process_blacklist = None
+else:
+    try:
+        process_blacklist_file = open(arguments.process_blacklist, "r")
+        process_blacklist = set(process_blacklist_file.readlines())
+    except Exception:
+        print(f"File '{arguments.process_blacklist}' not found or no permission!")
+        exit(1)
+
 try:
     while True:
         try:
-            if rpc is None:
-                rpc = connect()
-            rpc.update(details="Join SecSchool today!", large_image="secschool", large_text="SecSchool", buttons=[{"label": "Website", "url": "https://secschool.net"}, {"label": "Discord", "url": "https://discord.gg/2bWxKHn8Yd"}])
+            if is_running():
+                disconnect()
+            else:
+                if rpc is None:
+                    rpc = connect()
+                rpc.update(details="Join SecSchool today!", large_image="secschool", large_text="SecSchool", buttons=[{"label": "Website", "url": "https://secschool.net"}, {"label": "Discord", "url": "https://discord.gg/2bWxKHn8Yd"}])
         except Exception:
             if connected:
                 print("Connection lost!")
-                connected = False
                 rpc = None
+                disconnect()
             print(f"Trying to reconnect in {wait} seconds.")
         time.sleep(wait)
 except KeyboardInterrupt:
-    if rpc is not None:
-        rpc.close()
+    disconnect()
