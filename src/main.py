@@ -3,7 +3,7 @@ from pypresence import Presence
 
 rpc = None
 connected = False
-wait = 10
+wait = 15
 
 def connect():
     global connected
@@ -14,7 +14,7 @@ def connect():
         rpc.connect()
         print("Connected.")
         connected = True
-        wait = 10
+        wait = 15
         return rpc
     except Exception:
         print("Could not connect!")
@@ -72,6 +72,7 @@ try:
                 rpc = None
                 disconnect()
             print(f"Trying to reconnect in {wait} seconds.")
+        # Rate Limit (15s):  https://discord.com/developers/docs/rich-presence/how-to#updating-presence
         time.sleep(wait)
 except KeyboardInterrupt:
     disconnect()
