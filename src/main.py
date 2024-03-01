@@ -36,10 +36,9 @@ def is_running():
     global process_blacklist
     if process_blacklist is not None:
         for process in psutil.process_iter():
-            for name in process_blacklist:
-                if process.name() == name.strip():
-                    print(f"Blacklisted process '{name.strip()}' detected!")
-                    return True
+            if process.name() in process_blacklist:
+                print(f"Blacklisted process '{process.name()}' detected!")
+                return True
     return False
 
 argument_parser = argparse.ArgumentParser()
@@ -51,7 +50,7 @@ if arguments.blacklist is None:
 else:
     try:
         process_blacklist_file = open(arguments.blacklist, "r")
-        process_blacklist = set(process_blacklist_file.readlines())
+        process_blacklist = set(line.strip() for line in process_blacklist_file.readlines())
         print(f"Blacklist '{arguments.blacklist}' loaded.")
     except Exception:
         print(f"File '{arguments.blacklist}' not found or no permission!")
