@@ -1,2 +1,2 @@
 psutil==5.9.5
-pypresence==4.3.0
+https://github.com/qwertyquerty/pypresence/archive/9562a8c899cbc58f0b24bc389277ab2b61338f71.zip
