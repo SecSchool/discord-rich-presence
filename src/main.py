@@ -2,7 +2,6 @@ import time, psutil, argparse, datetime
 from pypresence import Presence
 
 rpc = None
-connected = False
 wait = 15
 
 def log(message):
@@ -10,14 +9,12 @@ def log(message):
     print(f"[{str(timestamp.hour).zfill(2)}:{str(timestamp.minute).zfill(2)}:{str(timestamp.second).zfill(2)}] {message}")
 
 def connect():
-    global connected
     global wait
     try:
         rpc = Presence(client_id="1193490043612971030")
         log("Connecting...")
         rpc.connect()
         log("Connected.")
-        connected = True
         wait = 15
         return rpc
     except Exception:
@@ -27,14 +24,12 @@ def connect():
         return None
 
 def disconnect():
-    global connected
     global rpc
     if rpc is not None:
         log("Disconnecting...")
         rpc.close()
         log("Disconnected.")
         rpc = None
-    connected = False
 
 def is_running():
     global process_blacklist
@@ -70,7 +65,7 @@ try:
                     rpc = connect()
                 rpc.update(details="Join SecSchool today!", large_image="secschool", large_text="SecSchool", buttons=[{"label": "Website", "url": "https://secschool.net"}, {"label": "Join Discord", "url": "https://discord.gg/2bWxKHn8Yd"}])
         except Exception:
-            if connected:
+            if rpc is not None:
                 log("Connection lost!")
                 rpc = None
                 disconnect()
