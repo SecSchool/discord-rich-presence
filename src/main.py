@@ -68,7 +68,7 @@ try:
             else:
                 if rpc is None:
                     rpc = connect()
-                rpc.update(details="Join SecSchool today!", large_image="secschool", large_text="SecSchool", buttons=[{"label": "Website", "url": "https://secschool.net"}, {"label": "Discord", "url": "https://discord.gg/2bWxKHn8Yd"}])
+                rpc.update(details="Join SecSchool today!", large_image="secschool", large_text="SecSchool", buttons=[{"label": "Website", "url": "https://secschool.net"}, {"label": "Join Discord", "url": "https://discord.gg/2bWxKHn8Yd"}])
         except Exception:
             if connected:
                 log("Connection lost!")
